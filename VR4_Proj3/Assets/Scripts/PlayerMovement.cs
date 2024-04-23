@@ -8,8 +8,6 @@ public class PlayerMovement : MonoBehaviour
 {
     // private CollisionDetection myColDec;
     
-    private SkinnedMeshRenderer bodyMeshRender;
-
     private float xInput;
     private float zInput;
     public float movementSpeed = 5.0f;
@@ -34,16 +32,9 @@ public class PlayerMovement : MonoBehaviour
     {
         
         myXrOrigin = GameObject.Find("XR Origin (XR Rig)");
-        //GameObject myXrOrigin = GameObject.Find("XR Origin (XR Rig)");
         myRB = GetComponent<Rigidbody>();
         myXRRig = myXrOrigin.transform;
         inputData = myXrOrigin.GetComponent<InputData>();
-
-        /*
-        // skinned mesh
-        GameObject childBodyObj = transform.GetChild(0).transform.GetChild(0).gameObject;
-        bodyMeshRender = childBodyObj.GetComponent<SkinnedMeshRenderer>();
-        */
 
     }
 
@@ -53,11 +44,9 @@ public class PlayerMovement : MonoBehaviour
         xInput = Input.GetAxis("Horizontal");
         zInput = Input.GetAxis("Vertical");
 
-        //bodyMeshRender.enabled = false;
         myXRRig.position = transform.position + transform.up * 1.6f;
         //myXRRig.rotation = transform.rotation;
 
-        /*
         // fetching 2D joystick input
         if (inputData.leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 movement))
         {
@@ -97,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         grounded = (Physics.Raycast(ray, out hit, playerHeight + 0.1f, groundedMask)) ? true : false;
+        /*
         */
     }
     

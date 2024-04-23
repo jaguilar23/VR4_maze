@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.21108171, g: 0.05813721, b: 0.036018983, a: 1}
+  m_IndirectSpecularColor: {r: 0.21108195, g: 0.05813718, b: 0.03601958, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -584,7 +584,6 @@ GameObject:
   - component: {fileID: 490742914}
   - component: {fileID: 490742913}
   - component: {fileID: 490742912}
-  - component: {fileID: 490742916}
   m_Layer: 3
   m_Name: ground
   m_TagString: Untagged
@@ -678,33 +677,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &490742916
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 490742911}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &593584075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,10 +2282,13 @@ PrefabInstance:
       addedObject: {fileID: 1631775136}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71e7fe3c1dba8f4479966a1beafbf011, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1631775142}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71e7fe3c1dba8f4479966a1beafbf011, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1631775139}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71e7fe3c1dba8f4479966a1beafbf011, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1631775138}
+      addedObject: {fileID: 1631775141}
   m_SourcePrefab: {fileID: 100100000, guid: 71e7fe3c1dba8f4479966a1beafbf011, type: 3}
 --- !u!1 &1631775133 stripped
 GameObject:
@@ -2353,28 +2328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cccb386c6942a274590df103be5cd608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &1631775138
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1631775133}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!54 &1631775139
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2400,8 +2353,50 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &1631775141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631775133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac67b01bcdb1f4c4894f09160542c15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 5
+  playerHeight: 0.6
+  groundedMask:
+    serializedVersion: 2
+    m_Bits: 0
+  grounded: 0
+  currentGravity: 0
+--- !u!136 &1631775142
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631775133}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.44
+  m_Height: 1.54
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.76, z: 0}
 --- !u!1 &1661234172
 GameObject:
   m_ObjectHideFlags: 0
