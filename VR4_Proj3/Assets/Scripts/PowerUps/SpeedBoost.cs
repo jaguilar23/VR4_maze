@@ -13,12 +13,12 @@ public class SpeedBoost : MonoBehaviour
     private GameObject disableBoost = null;
 
     private MeshRenderer myRenderer;
-    private SphereCollider myCollider;
+    private CapsuleCollider myCollider;
 
     private void Start()
     {
         myRenderer = GetComponent<MeshRenderer>();
-        myCollider = GetComponent<SphereCollider>();
+        myCollider = GetComponent<CapsuleCollider>();
     }
 
     private void Update()
