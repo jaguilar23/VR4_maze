@@ -27,6 +27,13 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveAmount;
     Vector3 smoothMoveVelocity;
 
+    // animation
+    private Animator anim;
+
+    // comprehensive list of player animation states
+    private enum State { idle, run, sprint };
+    private State currentState;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +42,9 @@ public class PlayerMovement : MonoBehaviour
         myRB = GetComponent<Rigidbody>();
         myXRRig = myXrOrigin.transform;
         inputData = myXrOrigin.GetComponent<InputData>();
+
+        anim = GetComponent<Animator>();
+        currentState = State.idle;  // set player's state to idle by default
 
     }
 
@@ -86,14 +96,22 @@ public class PlayerMovement : MonoBehaviour
         }
 
         grounded = (Physics.Raycast(ray, out hit, playerHeight + 0.1f, groundedMask)) ? true : false;
-        /*
-        */
+
+        anim.SetInteger("State", (int)currentState);
     }
     
     private void FixedUpdate()
     {
         Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
         myRB.MovePosition(myRB.position + localMove);
+
+        // check if the player is not moving
+        if (moveAmount.magnitude <= 0.01f)
+            currentState = State.idle;
+        else if (movementSpeed > 2)
+            currentState = State.sprint;
+        else
+            currentState = State.run;
 
         // turn off gravity when on a slope
         //myRB.useGravity = !grounded;
@@ -108,22 +126,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 gravity = currentGravity * Vector3.up;
         myRB.AddForce(gravity, ForceMode.Acceleration);
     }
-    /*
-    // check if player is positioned above a slope
-    private bool slopeCheck()
+    
+    public void changeAnimState(int state)
     {
-        onSlope = Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f);
-        // perform a raycast if the length between the player and the floor beneath it is +0.3f
-        // the information about the object will be stored on slopeHit
-        if (onSlope)
-        {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
-        }
-
-        return false;
+        currentState = (State)state;
     }
-    */
-
 
 }
