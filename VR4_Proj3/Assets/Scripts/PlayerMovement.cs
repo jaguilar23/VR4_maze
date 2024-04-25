@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float xInput;
     private float zInput;
     public float movementSpeed = 5.0f;
+    private bool isMoving = false;
 
     private InputData inputData;
     GameObject myXrOrigin;
@@ -62,12 +63,29 @@ public class PlayerMovement : MonoBehaviour
         {
             xInput = movement.x;
             zInput = movement.y;
+
+            if ((xInput != 0) || (zInput != 0))
+            {
+                isMoving = true;
+            }
+            else
+            {
+                isMoving = false;
+            }
         }
         else
         {
             // keyboard/controller input
             xInput = Input.GetAxis("Horizontal");
             zInput = Input.GetAxis("Vertical");
+
+            if ((xInput != 0) || (zInput != 0))
+            {
+                isMoving = true;
+            } else
+            {
+                isMoving = false;
+            }
         }
         
 
@@ -105,8 +123,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
         myRB.MovePosition(myRB.position + localMove);
 
+
         // check if the player is not moving
-        if (moveAmount.magnitude <= 0.01f)
+        if (!isMoving)
             currentState = State.idle;
         else if (movementSpeed > 2)
             currentState = State.sprint;
