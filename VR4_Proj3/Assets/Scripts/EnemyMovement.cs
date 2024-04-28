@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[ExecuteInEditMode]
 public class EnemyMovement : MonoBehaviour
 {
     public NavMeshAgent agent;
@@ -29,7 +30,7 @@ public class EnemyMovement : MonoBehaviour
     Mesh sightMesh;
     int count;
     float scanInterval;
-    float scanTimer;
+    public float scanTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -59,13 +60,22 @@ public class EnemyMovement : MonoBehaviour
             Scan();
         }
 
-        if (coolDown > 0)    // demon mode
+        if (isAggro)
+        {
+            currentCoolDown = coolDown;
+            isAggro = false;
+        }
+
+        if (currentCoolDown > 0)    // demon mode
         {
             currentCoolDown -= Time.deltaTime;
             agent.SetDestination(player.transform.position);
+            agent.speed = 1.5f;
         }
         else // funky mode
         {
+            agent.speed = 2.3f;
+
             if (ReachedGoal())
             {
                 agent.SetDestination(player.transform.position);
@@ -78,11 +88,19 @@ public class EnemyMovement : MonoBehaviour
     {
         count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
 
-        if (IsInSight(player))
+        Objects.Clear();
+        for (int i = 0; i < count; ++i)
         {
-            currentCoolDown = coolDown; // reset aggro timer
-            Debug.Log("Seen >:)");
+            GameObject obj = colliders[i].gameObject;
+            if (IsInSight(obj))
+            {
+                //currentCoolDown = coolDown; // reset aggro timer
+                isAggro = true;
+                Debug.Log("Seen >:)");
+                Objects.Add(obj);
+            }
         }
+
     }
 
     public bool IsInSight(GameObject obj)
@@ -102,6 +120,9 @@ public class EnemyMovement : MonoBehaviour
         {
             return false;
         }
+
+        origin.y += height / 2;
+        dest.y = origin.y;
 
         return true;
     }
@@ -154,9 +175,10 @@ public class EnemyMovement : MonoBehaviour
 
         float currentAngle = -angle;
         float deltaAngle = (angle * 2) / segments;
+
         for (int i = 0; i < segments; ++i)
         {
-            bottomLeft = Quaternion.Euler(0, -currentAngle, 0) * Vector3.forward * distance;
+            bottomLeft = Quaternion.Euler(0, currentAngle, 0) * Vector3.forward * distance;
             bottomRight = Quaternion.Euler(0, currentAngle + deltaAngle, 0) * Vector3.forward * distance;
             
             topRight = bottomRight + Vector3.up * height;
@@ -215,6 +237,12 @@ public class EnemyMovement : MonoBehaviour
         for (int i = 0; i < count; ++i)
         {
             Gizmos.DrawSphere(colliders[i].transform.position, 0.2f);
+        }
+
+        Gizmos.color = Color.green;
+        foreach (var obj in Objects)
+        {
+            Gizmos.DrawSphere(obj.transform.position, 5.0f);
         }
     }
 }
