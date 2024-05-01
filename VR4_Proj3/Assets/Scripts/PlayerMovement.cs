@@ -87,7 +87,15 @@ public class PlayerMovement : MonoBehaviour
                 isMoving = false;
             }
         }
-        
+
+        if (inputData.rightController.TryGetFeatureValue(CommonUsages.triggerButton, out bool t_pressed))
+        {
+            if (t_pressed)
+            {
+                
+            }
+        }
+
 
 
         // Smoothed xz-movement
