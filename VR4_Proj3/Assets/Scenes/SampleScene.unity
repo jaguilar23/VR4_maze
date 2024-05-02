@@ -2429,7 +2429,7 @@ Transform:
   m_GameObject: {fileID: 284223092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.33, z: -2.85}
+  m_LocalPosition: {x: 0, y: 3.1, z: -2.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10136,7 +10136,7 @@ MonoBehaviour:
   Objects: []
   isAggro: 0
   coolDown: 0
-  scanTimer: -482.4832
+  scanTimer: -542.8298
 --- !u!195 &1298490947
 NavMeshAgent:
   m_ObjectHideFlags: 0
