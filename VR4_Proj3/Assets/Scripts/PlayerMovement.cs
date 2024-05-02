@@ -55,9 +55,10 @@ public class PlayerMovement : MonoBehaviour
         xInput = Input.GetAxis("Horizontal");
         zInput = Input.GetAxis("Vertical");
 
-        myXRRig.position = transform.position + transform.up * 1.6f;
-        //myXRRig.rotation = transform.rotation;
+        float xSight = 0.0f;
 
+        myXRRig.position = transform.position;
+        
         // fetching 2D joystick input
         if (inputData.leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 movement))
         {
@@ -88,15 +89,17 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (inputData.rightController.TryGetFeatureValue(CommonUsages.triggerButton, out bool t_pressed))
+        if (inputData.rightController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 sight))
         {
-            if (t_pressed)
-            {
-                
-            }
+            xSight = sight.x;
+        }
+        else
+        {
+            xSight = Input.GetAxis("Mouse X");
         }
 
 
+        myXRRig.transform.GetChild(0).GetComponent<CameraMovement>().inputX = xSight; // sets x input to mouse input
 
         // Smoothed xz-movement
         Vector3 moveDir = new Vector3(xInput, 0, zInput).normalized;
@@ -108,6 +111,9 @@ public class PlayerMovement : MonoBehaviour
         Ray ray = new Ray(transform.position + playerHeightOffset, -transform.up);
         RaycastHit hit;
 
+        /*
+         * 
+
         // rotate with XR
         if (inputData.Device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rotD))
         {
@@ -116,10 +122,12 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            GameObject cameraTransform = myXrOrigin.transform.GetChild(0).GetChild(0).gameObject;
+            GameObject cameraTransform = myXrOrigin.transform.GetChild(0).gameObject;
             Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, myXRRig.eulerAngles.y, transform.eulerAngles.z);
             transform.rotation = Quaternion.Euler(eulerRotation);
         }
+         */
+        transform.rotation = myXRRig.transform.GetChild(0).gameObject.transform.rotation;
 
         grounded = (Physics.Raycast(ray, out hit, playerHeight + 0.1f, groundedMask)) ? true : false;
 
