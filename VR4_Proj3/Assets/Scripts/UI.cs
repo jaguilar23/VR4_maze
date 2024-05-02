@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
 
     public bool isFinished = false;
     public bool isCaught = false;
-   
     
     public bool restartButtonPressed;
     public GameObject start;
@@ -19,12 +19,6 @@ public class UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI myWin;
     [SerializeField] TextMeshProUGUI myLose;
     public GameObject myRestart;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -65,10 +59,10 @@ public class UI : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (playerObject != null) 
-        { 
-            playerObject.transform.position = start.gameObject.transform.position;
-            restartButtonPressed = true;
-        
+        {
+            //playerObject.transform.position = start.gameObject.transform.position;
+            //restartButtonPressed = true;
+            SceneManager.LoadScene("SampleScene");
         }
     }
 }

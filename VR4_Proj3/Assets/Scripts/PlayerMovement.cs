@@ -31,6 +31,12 @@ public class PlayerMovement : MonoBehaviour
     // animation
     private Animator anim;
 
+    // UI holds capture and win conditions
+    private UI UIobj;
+    public Transform deathLocation;
+    public Transform winLocation;
+    private bool hasTeleported; // prevents getting teleported twice
+
     // comprehensive list of player animation states
     private enum State { idle, run, sprint };
     private State currentState;
@@ -47,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         currentState = State.idle;  // set player's state to idle by default
 
+        UIobj = GetComponent<UI>();
     }
 
     // Update is called once per frame
@@ -110,26 +117,21 @@ public class PlayerMovement : MonoBehaviour
         Vector3 playerHeightOffset = new Vector3(0.0f, 1.0f, 0.0f);
         Ray ray = new Ray(transform.position + playerHeightOffset, -transform.up);
         RaycastHit hit;
-
-        /*
-         * 
-
-        // rotate with XR
-        if (inputData.Device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rotD))
-        {
-            Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, rotD.eulerAngles.y, transform.eulerAngles.z);
-            transform.rotation = Quaternion.Euler(eulerRotation);
-        }
-        else
-        {
-            GameObject cameraTransform = myXrOrigin.transform.GetChild(0).gameObject;
-            Vector3 eulerRotation = new Vector3(transform.eulerAngles.x, myXRRig.eulerAngles.y, transform.eulerAngles.z);
-            transform.rotation = Quaternion.Euler(eulerRotation);
-        }
-         */
+        
         transform.rotation = myXRRig.transform.GetChild(0).gameObject.transform.rotation;
 
         grounded = (Physics.Raycast(ray, out hit, playerHeight + 0.1f, groundedMask)) ? true : false;
+
+        if (UIobj.isCaught && !hasTeleported)
+        {
+            transform.position = deathLocation.position;
+            hasTeleported = true;
+        }
+        else if (UIobj.isFinished && !hasTeleported)
+        {
+            transform.position = winLocation.position;
+            hasTeleported = true;
+        }
 
         anim.SetInteger("State", (int)currentState);
     }

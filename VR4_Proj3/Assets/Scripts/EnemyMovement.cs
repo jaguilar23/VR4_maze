@@ -131,7 +131,7 @@ public class EnemyMovement : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, currentGoal);
 
-        return distance < 0.5f;
+        return distance < 1f;
     }
 
     Mesh CreateWedgeMesh()
