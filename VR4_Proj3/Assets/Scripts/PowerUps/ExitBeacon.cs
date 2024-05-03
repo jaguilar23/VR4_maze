@@ -43,7 +43,7 @@ public class ExitBeacon : MonoBehaviour
         Debug.Log("object hit");
 
         // Wait for 5 seconds
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         // Deactivate the object after 5 seconds
         objectToReveal.GetComponent<Renderer>().enabled = false;

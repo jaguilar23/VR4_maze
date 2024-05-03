@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.XR;
 using UnityEngine;
+using TMPro;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -17,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
     GameObject myXrOrigin;
     private Rigidbody myRB;         // player rigidbody
     private Transform myXRRig;      // XR headset rigidbody
+    public GameObject leftController;
+    public GameObject rightController;
+    public float smoothTime = 0.1f; // for xrRig to follow player smoothly
+    private Vector3 xrVelocity = Vector3.zero;
 
     [Header("Ground Check")]
     public float playerHeight = 0.6f;
@@ -64,11 +69,33 @@ public class PlayerMovement : MonoBehaviour
 
         float xSight = 0.0f;
 
-        if (UIobj.isCaught || UIobj.isFinished)
+
+        if (UIobj.isCaught && !hasTeleported)
+        {
+            transform.position = deathLocation.position;
             myXRRig.position = transform.position;
-        else
-            myXRRig.position = new Vector3(transform.position.x, myXRRig.position.y, transform.position.z);
+            hasTeleported = true;
+        }
+        else if (UIobj.isFinished && !hasTeleported)
+        {
+            transform.position = winLocation.position;
+            myXRRig.position = transform.position;
+            hasTeleported = true;
+        }
         
+        if (UIobj.isCaught || UIobj.isFinished)
+        {
+            leftController.SetActive(true);
+            rightController.SetActive(true);
+        }
+
+        //else
+        //XRRig.position = new Vector3(transform.position.x, myXRRig.position.y, transform.position.z);
+
+        //myXRRig.position = transform.position + new Vector3(0, 1.3f, 0) + (transform.forward * 0.2f);
+        //myXRRig.position = Vector3.SmoothDamp(myXRRig.position, transform.position + new Vector3(0, 1.0f, 0), ref xrVelocity, smoothTime);
+        //myXRRig.position = transform.position + new Vector3(0, 1.3f, 0);
+
         // fetching 2D joystick input
         if (inputData.leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 movement))
         {
@@ -124,17 +151,6 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = myXRRig.transform.GetChild(0).gameObject.transform.rotation;
 
         grounded = (Physics.Raycast(ray, out hit, playerHeight + 0.1f, groundedMask)) ? true : false;
-
-        if (UIobj.isCaught && !hasTeleported)
-        {
-            transform.position = deathLocation.position;
-            hasTeleported = true;
-        }
-        else if (UIobj.isFinished && !hasTeleported)
-        {
-            transform.position = winLocation.position;
-            hasTeleported = true;
-        }
 
         anim.SetInteger("State", (int)currentState);
     }

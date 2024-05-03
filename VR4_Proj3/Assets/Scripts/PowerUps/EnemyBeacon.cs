@@ -21,6 +21,11 @@ public class EnemyBeacon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameObject.Find("Running Crawl") != null)
+        {
+            objectToReveal.gameObject.transform.position = GameObject.Find("Running Crawl").transform.position;
+        }
+
         transform.Rotate(transform.up * 60 * Time.deltaTime, Space.Self);
     }
 
@@ -43,7 +48,7 @@ public class EnemyBeacon : MonoBehaviour
         Debug.Log("object hit");
 
         // Wait for 5 seconds
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         // Deactivate the object after 5 seconds
         objectToReveal.GetComponent<Renderer>().enabled = false;

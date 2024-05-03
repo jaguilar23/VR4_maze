@@ -45,6 +45,7 @@ public class UI : MonoBehaviour
 
         if (collision.gameObject.tag == "Enemy")
         {
+            collision.gameObject.GetComponent<EnemyMovement>().PlayDeathNoise();
             isCaught = true;
         }
     }

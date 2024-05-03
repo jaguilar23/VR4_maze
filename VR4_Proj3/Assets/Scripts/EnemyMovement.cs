@@ -35,6 +35,11 @@ public class EnemyMovement : MonoBehaviour
     float scanInterval;
     public float scanTimer;
 
+    AudioSource audioSource;
+    public AudioClip spawnNoise;
+    public AudioClip closeNoise;
+    public AudioClip deathNoise;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +53,23 @@ public class EnemyMovement : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
 
         currentCoolDown = 0;
+    }
+
+    public void PlaySpawnNoise()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = spawnNoise;
+        audioSource.Play();
+    }
+
+    public void PlayDeathNoise()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+        audioSource.clip = deathNoise;
+        audioSource.Play();
     }
 
     // Update is called once per frame
@@ -102,6 +124,12 @@ public class EnemyMovement : MonoBehaviour
         
         lastPosition = transform.position;  // updating last position
 
+        if ((transform.position - player.transform.position).magnitude < 10 && !audioSource.isPlaying)
+        {
+            audioSource.clip = closeNoise;
+            audioSource.Play();
+        }
+
         /*
         for (int i = 0; i < lastFewPositions.Length - 1; ++i)
         {
@@ -127,7 +155,6 @@ public class EnemyMovement : MonoBehaviour
             {
                 //currentCoolDown = coolDown; // reset aggro timer
                 isAggro = true;
-                Debug.Log("Seen >:)");
                 Objects.Add(obj);
             }
         }

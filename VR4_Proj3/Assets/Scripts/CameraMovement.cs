@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class CameraMovement : MonoBehaviour
         if (Physics.Raycast(start, camDir, out hit, maxRadius, layerMask))
         {
             //transform.position -= camDir * 0.1f;
-            transform.position = hit.point - (camDir * 0.1f);
+            transform.position = hit.point - (camDir * 0.25f);
         } else
         {
             transform.position = start + (camDir * maxRadius);

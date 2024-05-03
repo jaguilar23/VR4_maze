@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SpeedBoost : MonoBehaviour
 {
-    public float speedMultiplier = 2f; // Multiplier for player's walk speed
-    public float duration = 5f; // Duration of speed boost
+    public float speedMultiplier = 1.5f; // Multiplier for player's walk speed
+    public float duration = 10; // Duration of speed boost
     private float originalSpeed;
     private bool boostActive = false;
 
