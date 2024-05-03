@@ -64,6 +64,7 @@ public class CameraMovement : MonoBehaviour
         */
 
         transform.RotateAround(player.position, player.up, inputX * rotationSpeed);
+        transform.LookAt(start);
         //transform.RotateAround(player.position, player.right, mouseY);
     }
 

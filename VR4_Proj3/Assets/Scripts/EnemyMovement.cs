@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[ExecuteInEditMode]
 public class EnemyMovement : MonoBehaviour
 {
     public NavMeshAgent agent;
     public GameObject player;
 
     private Vector3 lastPosition;
+    private Vector3[] lastFewPositions = new Vector3[4];   // last 3 positions, not including current position
+    private int posCount;
     private Vector3 currentGoal;    // last position player was at
+
+    private int noMovementCount = 0;
 
     [Header("Line of sight")]
     public float distance = 10;
@@ -37,6 +40,10 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         lastPosition = transform.position;
+
+        for (int i = 0; i < lastFewPositions.Length; ++i)
+            lastFewPositions[i] = transform.position;
+
         currentGoal = transform.position;
         scanInterval = 1.0f / scanFrequency;
 
@@ -51,7 +58,6 @@ public class EnemyMovement : MonoBehaviour
         if ((transform.position - lastPosition) != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(transform.position - lastPosition);
         
-        lastPosition = transform.position;  // updating last position
 
         scanTimer -= Time.deltaTime;
         if (scanTimer < 0)
@@ -66,6 +72,17 @@ public class EnemyMovement : MonoBehaviour
             isAggro = false;
         }
 
+        
+        // if zombie is frozen, count the number of consecutive stopped movements
+        if ((transform.position - lastFewPositions[3]).magnitude > 0.1f)
+            noMovementCount = 0;
+        else
+            noMovementCount += 1;
+
+        //Debug.Log("Last few positions:\n" + lastFewPositions[0] + ", " + lastFewPositions[1] + ", " + lastFewPositions[2]);
+        //Debug.Log("Current Speed: " + (transform.position - lastFewPositions[3]).magnitude);
+        //Debug.Log(noMovementCount);
+
         if (currentCoolDown > 0)    // demon mode
         {
             currentCoolDown -= Time.deltaTime;
@@ -76,12 +93,26 @@ public class EnemyMovement : MonoBehaviour
         {
             agent.speed = 2.3f;
 
-            if (ReachedGoal())
+            if (ReachedGoal() || noMovementCount > 10)
             {
                 agent.SetDestination(player.transform.position);
                 currentGoal = player.transform.position;
             }
         }
+        
+        lastPosition = transform.position;  // updating last position
+
+        /*
+        for (int i = 0; i < lastFewPositions.Length - 1; ++i)
+        {
+            lastFewPositions[i + 1] = lastFewPositions[i];
+        }
+         */
+        lastFewPositions[3] = lastFewPositions[2];
+        lastFewPositions[2] = lastFewPositions[1];
+        lastFewPositions[1] = lastFewPositions[0];
+        lastFewPositions[0] = lastPosition;
+
     }
 
     public void Scan()
@@ -110,16 +141,13 @@ public class EnemyMovement : MonoBehaviour
         Vector3 direction = dest - origin;
 
         if (direction.y < 0 || direction.y > height)
-        {
             return false;
-        }
 
         direction.y = 0;
         float deltaAngle = Vector3.Angle(direction, transform.forward);
+        
         if (deltaAngle > angle)
-        {
             return false;
-        }
 
         origin.y += height / 2;
         dest.y = origin.y;

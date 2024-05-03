@@ -64,7 +64,10 @@ public class PlayerMovement : MonoBehaviour
 
         float xSight = 0.0f;
 
-        myXRRig.position = transform.position;
+        if (UIobj.isCaught || UIobj.isFinished)
+            myXRRig.position = transform.position;
+        else
+            myXRRig.position = new Vector3(transform.position.x, myXRRig.position.y, transform.position.z);
         
         // fetching 2D joystick input
         if (inputData.leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 movement))
